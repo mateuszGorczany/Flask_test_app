@@ -16,10 +16,9 @@ pipeline {
     stage('Deliver') {
       steps {
         sh 'python app.py > .logs 2>&1 &'
-        sh 'echo $! > .pidfile'
         sh 'cat .logs'
         input 'Finished using the web site? (Click "Proceed" to continue)'
-        sh 'kill $(cat .pidfile)'
+        sh 'pkill -f app.py'
       }
     }
 
