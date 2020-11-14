@@ -26,6 +26,7 @@ pipeline {
   post {
     always {
       junit 'test_reports/*.xml'
+      archiveArtifacts 'flask.log'
       sh 'cat flask.log'
     }
 
