@@ -9,7 +9,7 @@ pipeline {
     stage('Install dependencies') {
       steps {
         withEnv(overrides: ["HOME=${env.WORKSPACE}"]) {
-          sh '/bin/env python -m pip install -r requirements.txt --user'
+          sh '/usr/bin/env python -m pip install -r requirements.txt --user'
         }
 
       }
