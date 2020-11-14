@@ -1,7 +1,7 @@
 FROM python:3.8-slim
 
-# for flask web server
-EXPOSE 1337
+# tool to kill a proces
+RUN apt-get install procps
 
 # set working directory
 WORKDIR /app
@@ -12,6 +12,9 @@ RUN pip install -r requirements.txt
 
 # copy source code into working directory
 COPY . /app
+
+# tell which port will be exposed to dind docker
+EXPOSE 1337
 
 # This is the runtime command for the container
 CMD ["/bin/bash"]
