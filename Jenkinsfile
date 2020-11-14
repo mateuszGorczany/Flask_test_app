@@ -15,8 +15,8 @@ pipeline {
 
     stage('Deliver') {
       steps {
-        sh 'python app.py > .logs 2>&1 &'
-        sh 'cat .logs'
+        sh 'python app.py > flask.log 2>&1 &'
+        sh 'cat flask.log'
         input 'Finished using the web site? (Click "Proceed" to continue)'
         sh 'pkill -f app.py'
       }
@@ -26,7 +26,7 @@ pipeline {
   post {
     always {
       junit 'test_reports/*.xml'
-      sh 'cat .logs'
+      sh 'cat flask.log'
     }
 
   }
