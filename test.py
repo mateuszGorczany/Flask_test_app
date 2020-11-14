@@ -28,6 +28,6 @@ class TestApp(unittest.TestCase):
         
 
 if __name__ == "__main__":
-    runner = xmlrunner.XMLTestRunner(output="test_report")
+    runner = xmlrunner.XMLTestRunner(output="test_reports")
     unittest.main(testRunner=runner)
     unittest.main(verbosity=2)
