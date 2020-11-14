@@ -16,6 +16,3 @@ COPY . /app
 
 # tell which port will be exposed to dind docker
 EXPOSE 1337
-
-# This is the runtime command for the container
-CMD ["/bin/bash"]
