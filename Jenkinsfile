@@ -9,7 +9,7 @@ pipeline {
     stage('Install dependencies') {
       steps {
         withEnv(overrides: ["HOME=${env.WORKSPACE}"]) {
-          sh 'pip install -r requirements.txt --user'
+          sh 'export PATH=~/.local/bin:$PATH & pip install -r requirements.txt --user'
         }
 
       }
