@@ -1,7 +1,4 @@
-FROM python:3.8.6
-
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends
+FROM python:3.8-slim
 
 # for flask web server
 EXPOSE 1337
