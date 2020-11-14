@@ -15,12 +15,6 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        sh 'python app.py'
-      }
-    }
-
     stage('Test') {
       steps {
         sh 'python test.py'
