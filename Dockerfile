@@ -1,6 +1,7 @@
 FROM python:3.8-slim
 
 # tool to kill a proces
+RUN apt-get update
 RUN apt-get install procps
 
 # set working directory
