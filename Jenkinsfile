@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'packages.sh && python app.py'
+        sh 'pip install -r requirements.txt --user & python app.py'
       }
     }
 
