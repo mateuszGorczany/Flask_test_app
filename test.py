@@ -24,7 +24,7 @@ class TestApp(unittest.TestCase):
         name = "Mateusz"
         rv = self.app.get(f"/greet/{name}")
         self.assertEqual(rv.status, "200 OK")
-        self.assertEqual(rv.data, b"Witj Mateusz\n")
+        self.assertEqual(rv.data, b"Witaj Mateusz\n")
         
 
 if __name__ == "__main__":
