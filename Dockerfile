@@ -18,4 +18,4 @@ COPY . /app
 EXPOSE 1337
 
 # This is the runtime command for the container
-# CMD ["/bin/bash"]
+CMD ["/bin/bash"]
