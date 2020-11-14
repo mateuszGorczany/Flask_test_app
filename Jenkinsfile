@@ -6,12 +6,18 @@ pipeline {
 
   }
   stages {
-    stage('Build') {
+    stage('Install dependencies') {
       steps {
         withEnv(overrides: ["HOME=${env.WORKSPACE}"]) {
-          sh 'pip install -r requirements.txt & python app.py'
+          sh 'pip install -r requirements.txt'
         }
 
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'python app.py'
       }
     }
 
