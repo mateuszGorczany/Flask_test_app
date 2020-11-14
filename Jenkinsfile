@@ -25,7 +25,7 @@ pipeline {
   }
   post {
     always {
-      junit 'test-reports/*.xml'
+      junit 'test_reports/*.xml'
       sh 'cat .logs'
     }
 
