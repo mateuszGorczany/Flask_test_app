@@ -12,5 +12,13 @@ pipeline {
       }
     }
 
+    stage('Deliver') {
+      steps {
+        sh 'python app.py'
+        input 'Finished using the web site? (Click "Proceed" to continue)'
+        sh 'pkill -f app.py'
+      }
+    }
+
   }
 }
