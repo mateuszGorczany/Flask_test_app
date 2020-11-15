@@ -1,24 +1,48 @@
 pipeline {
-  agent {
-    dockerfile {
-      filename 'Dockerfile'
-      args '--publish 2115:1337'
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        script {
+          dockerImage = docker.build("mgorczany/docker-flask-test:${BUILD_NUMBER}", "--publish 2115:1337")
+        }
+
+      }
     }
 
-  }
-  stages {
     stage('Test') {
       steps {
-        sh 'python test.py'
+        script {
+          dockerImage.inside { sh 'python test.py' }
+        }
+
       }
     }
 
     stage('Deliver') {
       steps {
-        sh 'python app.py > flask.log 2>&1 &'
-        sh 'cat flask.log'
-        input 'Finished using the web site? (Click "Proceed" to continue)'
-        sh 'pkill -f app.py'
+        script {
+          dockerImage.inside {
+            sh 'python app.py > flask.log 2>&1 &'
+            sh 'cat flask.log'
+            input 'Finished using the web site? (Click "Proceed" to continue)'
+            sh 'pkill -f app.py'
+          }
+        }
+
+      }
+    }
+
+    stage('Collect logs') {
+      steps {
+        script {
+          dockerImage.inside {
+            junit 'test_reports/*.xml'
+            archiveArtifacts 'flask.log'
+            sh 'cat flask.log'
+          }
+        }
+
       }
     }
 
@@ -39,14 +63,6 @@ pipeline {
   environment {
     registry = 'mgorczany/docker-flask-test:'
     registryCredential = 'dockerhub'
-    dockerImage = "${registry}:${env.BUILD_NUMBER}"
-  }
-  post {
-    always {
-      junit 'test_reports/*.xml'
-      archiveArtifacts 'flask.log'
-      sh 'cat flask.log'
-    }
-
+    dockerImage = ''
   }
 }
