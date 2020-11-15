@@ -65,17 +65,10 @@ pipeline {
           docker.withRegistry('', "${registryCredential}")
           {
             imageToDeploy = docker.image("${imageName}")
-            imageToDeploy.push()
+            // imageToDeploy.push()
           }
         }
 
-      }
-    }
-
-    stage('Remove Unused docker image') {
-      agent any
-      steps {
-        sh 'docker image prune --all --force --filter "label!=python:3.8-slim"'
       }
     }
 
@@ -84,5 +77,12 @@ pipeline {
     registry = 'mgorczany/docker-flask-test:'
     registryCredential = 'dockerhub'
     imageName = "${registry}${env.BUILD_ID}"
+  }
+  post {
+    always {
+      sh 'docker image prune --all --force --filter "label!=python:3.8-slim"'
+      sh 'Image removed'
+    }
+
   }
 }
