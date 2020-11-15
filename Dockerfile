@@ -7,12 +7,11 @@ RUN apt-get --yes install procps
 # set working directory
 WORKDIR /app
 
-# install required libraries
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
 # copy source code into working directory
 COPY . /app
+
+# install required libraries
+RUN pip install -r requirements.txt
 
 # tell which port will be exposed to dind docker
 EXPOSE 1337
