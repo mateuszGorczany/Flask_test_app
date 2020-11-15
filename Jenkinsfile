@@ -5,7 +5,7 @@ pipeline {
       steps {
         script {
           dockerImage = docker.build("mgorczany/docker-flask-test:${BUILD_NUMBER}")
-          Container = dockerImage.run("-it --publish 2115:1337")
+          Container = dockerImage.run("--priviledged -it --publish 2115:1337")
         }
 
       }
