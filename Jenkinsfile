@@ -83,7 +83,7 @@ pipeline {
     }
     post {
       always {
-        sh 'docker image rm $(docker image ls | grep -F -e ${registry} | awk \'NR>1\')'
+        sh 'docker image rm $(docker image ls | grep -F -e ${registry} | awk \'NR>1 {print $3}\')'
         echo 'Finished - last build is still available in the docker:dind'
       }
 
