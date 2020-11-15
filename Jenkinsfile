@@ -70,8 +70,8 @@ pipeline {
 
       stage('Celeaning') {
         steps {
-          sh 'docker image rm $(docker image ls | grep -Fv -e \'python\' | awk \'NR>2 {print $3}\')'
-          echo 'Image removed'
+          sh 'docker image prune'
+          echo 'Pruning completed'
         }
       }
 
@@ -83,7 +83,8 @@ pipeline {
     }
     post {
       always {
-        echo 'Finished'
+        sh 'docker image rm $(docker image ls | grep -Fv -e \'python\' | awk \'NR>2 {print $3}\')'
+        echo 'Finished - last build is still available in the docker:dind'
       }
 
     }
