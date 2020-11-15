@@ -38,6 +38,7 @@ pipeline {
       agent {
         docker {
           image "${registry}${env.BUILD_ID}"
+          args '--publish 2115:1337'
         }
 
       }
