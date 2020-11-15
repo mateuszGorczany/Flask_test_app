@@ -36,8 +36,8 @@ pipeline {
 
     stage('Deliver') {
       agent {
-        dockerfile {
-          label "${registry}:${env.BUILD_ID}"
+        docker {
+          image "${registry}${env.BUILD_ID}"
         }
 
       }
@@ -60,14 +60,14 @@ pipeline {
       agent any
       steps {
         input 'Publish created dockerimage on Dockerhub? (Click "Proceed" to continue)'
-        sh 'docker tag $(docker image ls -q | head -1) ${registry}:${env.BUILD_ID}'
       }
     }
 
     stage('Remove Unused docker image') {
       agent any
       steps {
-        sh "docker rmi $dockerImage"
+        sh "docker rmi ${registry}${env.BUILD_ID}"
+        sh 'docker image prune --all'
       }
     }
 
