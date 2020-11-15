@@ -5,7 +5,7 @@ pipeline {
       agent {
         dockerfile {
           filename 'Dockerfile'
-          args '-t ${registry}:${env.BUILD_ID}'
+          args '-t czytodziala'
           reuseNode true
         }
 
