@@ -2,8 +2,7 @@ pipeline {
   agent {
     dockerfile {
       filename 'Dockerfile'
-      label 'test:1'
-      args '--publish 2115:1337'
+      args '--publish 2115:1337 -t ${registry}:${env.BUILD_ID}'
     }
 
   }
