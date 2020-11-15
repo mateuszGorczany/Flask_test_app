@@ -16,3 +16,5 @@ COPY . /app
 
 # tell which port will be exposed to dind docker
 EXPOSE 1337
+
+CMD ["python", "app.py"]
