@@ -22,6 +22,24 @@ pipeline {
       }
     }
 
+    stage('Deploy') {
+      steps {
+        input 'Publish created dockerimage on Dockerhub? (Click "Proceed" to continue)'
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+
+      }
+    }
+
+  }
+  environment {
+    registry = 'mgorczany/docker-flask-test'
+    registryCredential = 'dockerhub'
+    dockerImage = ''
   }
   post {
     always {
