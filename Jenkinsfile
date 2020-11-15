@@ -70,7 +70,7 @@ pipeline {
 
       stage('Celeaning') {
         steps {
-          sh 'docker image prune --all --force --filter "label!=python:3.8-slim"'
+          sh 'docker image prune $(docker image ls | grep -v python | awk \'NR>1 {print $1}\')'
           sh 'Image removed'
         }
       }
