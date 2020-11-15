@@ -2,7 +2,7 @@ pipeline {
   agent {
     dockerfile {
       filename 'Dockerfile'
-      args '--publish 2115:1337'
+      args '--publish 2115:1337 --name $registry:$BUILD_NUMBER'
     }
 
   }
@@ -32,6 +32,12 @@ pipeline {
           }
         }
 
+      }
+    }
+
+    stage('Remove Unused docker image') {
+      steps {
+        sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
 
