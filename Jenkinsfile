@@ -5,13 +5,13 @@ pipeline {
       agent {
         dockerfile {
           filename 'Dockerfile'
+          args '-t ${registry}:${env.BUILD_ID}'
           reuseNode true
         }
 
       }
       steps {
         sh 'echo Building image...'
-        sh 'docker tag $(docker image ls -q | head -1) ${registry}:${env.BUILD_ID}'
       }
     }
 
