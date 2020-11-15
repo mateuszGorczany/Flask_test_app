@@ -5,7 +5,7 @@ pipeline {
       agent {
         dockerfile {
           filename 'Dockerfile'
-          additionalBuildArgs "--tag ${imageName}"
+          additionalBuildArgs "-t ${imageName}"
           reuseNode true
         }
 
