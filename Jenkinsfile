@@ -56,7 +56,7 @@ pipeline {
     stage('Deploy') {
       agent any
       steps {
-        input(message: 'Publish created dockerimage on Dockerhub? y/n', submitterParameter: 'if_publish', ok: 'ok')
+        input 'Publish created dockerimage on Dockerhub?'
         script {
           docker.withRegistry('', "${registryCredential}")
           {
@@ -70,7 +70,7 @@ pipeline {
 
       stage('Celeaning') {
         steps {
-          sh 'docker image prune $(docker image ls | grep -v python | awk \'NR>1 {print $1}\')'
+          sh 'docker image rm $(docker image ls | grep -v python | awk \'NR>1 {print $3}\')'
           sh 'Image removed'
         }
       }
