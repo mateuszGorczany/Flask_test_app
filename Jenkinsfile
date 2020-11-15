@@ -62,7 +62,7 @@ pipeline {
       steps {
         input 'Publish created dockerimage on Dockerhub? (Click "Proceed" to continue)'
         script {
-          docker.withRegistry('', 'registryCredential')
+          docker.withRegistry('', "${registryCredential}")
           {
             imageToDeploy = docker.image("${registry}${env.BUILD_ID}")
             imageToDeploy.push()
