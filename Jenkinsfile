@@ -2,16 +2,12 @@ pipeline {
   agent any
   stages {
     stage('Build') {
-      agent {
-        dockerfile {
-          filename 'Dockerfile'
-          additionalBuildArgs "-t ${imageName}"
-          reuseNode true
+      steps {
+        echo 'Building image...'
+        script {
+          docker.build("${imageName}")
         }
 
-      }
-      steps {
-        sh 'echo Building image...'
       }
     }
 
@@ -62,17 +58,11 @@ pipeline {
       steps {
         input(message: 'Publish created dockerimage on Dockerhub? y/n', submitterParameter: 'if_publish', ok: 'ok')
         script {
-          if (if_publish == 'y')
+          docker.withRegistry('', "${registryCredential}")
           {
-
-            docker.withRegistry('', "${registryCredential}")
-            {
-              imageToDeploy = docker.image("${imageName}")
-              // imageToDeploy.push()
-              echo 'Image pushed to your dockerhub repository'}
-            }
-
-            else { echo 'Continuing' }
+            imageToDeploy = docker.image("${imageName}")
+            // imageToDeploy.push()
+            echo 'Image pushed to your dockerhub repository'}
           }
 
         }
