@@ -6,7 +6,7 @@ pipeline {
         dockerfile {
           filename 'Dockerfile'
           args '--publish 2115:1337'
-          label '${registry}:${env.BUILD_ID}'
+          label '$registry}:$env.BUILD_ID'
         }
 
       }
