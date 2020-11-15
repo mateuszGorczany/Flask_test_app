@@ -18,7 +18,7 @@ pipeline {
     stage('Test') {
       agent {
         docker {
-          image "${registry}${env.BUILD_ID}"
+          image "${imageName}"
           args '--publish 2115:1337'
         }
 
@@ -37,7 +37,7 @@ pipeline {
     stage('Deliver') {
       agent {
         docker {
-          image "${registry}${env.BUILD_ID}"
+          image "${imageName}"
           args '--publish 2115:1337'
         }
 
@@ -64,7 +64,7 @@ pipeline {
         script {
           docker.withRegistry('', "${registryCredential}")
           {
-            imageToDeploy = docker.image("${registry}${env.BUILD_ID}")
+            imageToDeploy = docker.image("${imageName}")
             imageToDeploy.push()
           }
         }
@@ -75,8 +75,7 @@ pipeline {
     stage('Remove Unused docker image') {
       agent any
       steps {
-        sh "docker rmi ${registry}${env.BUILD_ID}"
-        sh 'docker image prune --all --force --filter "label!=python3.8-slim"'
+        sh 'docker image prune --all --force --filter "label!=python:3.8-slim"'
       }
     }
 
