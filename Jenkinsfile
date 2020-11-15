@@ -70,7 +70,7 @@ pipeline {
 
       stage('Celeaning') {
         steps {
-          sh 'docker image rm $(docker image ls | grep -v python | awk \'NR>1 {print $3}\')'
+          sh 'docker image prune'
           sh 'Image removed'
         }
       }
@@ -78,7 +78,7 @@ pipeline {
     }
     environment {
       registry = 'mgorczany/docker-flask-test:'
-      registryCredential = 'dockerhub'
+      registryCredential = credentials('dockerhub')
       imageName = "${registry}${env.BUILD_ID}"
     }
   }
