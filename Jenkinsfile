@@ -60,29 +60,35 @@ pipeline {
     stage('Deploy') {
       agent any
       steps {
-        input 'Publish created dockerimage on Dockerhub? (Click "Proceed" to continue)'
+        input(message: 'Publish created dockerimage on Dockerhub? y/n', submitterParameter: 'if_publish', ok: 'ok')
         script {
-          docker.withRegistry('', "${registryCredential}")
+          if (if_publish == 'y')
           {
-            imageToDeploy = docker.image("${imageName}")
-            // imageToDeploy.push()
+
+            docker.withRegistry('', "${registryCredential}")
+            {
+              imageToDeploy = docker.image("${imageName}")
+              // imageToDeploy.push()
+              echo 'Image pushed to your dockerhub repository'}
+            }
+
+            else { echo 'Continuing' }
           }
+
         }
-
       }
-    }
 
-  }
-  environment {
-    registry = 'mgorczany/docker-flask-test:'
-    registryCredential = 'dockerhub'
-    imageName = "${registry}${env.BUILD_ID}"
-  }
-  post {
-    always {
-      sh 'docker image prune --all --force --filter "label!=python:3.8-slim"'
-      sh 'Image removed'
-    }
+      stage('Celeaning') {
+        steps {
+          sh 'docker image prune --all --force --filter "label!=python:3.8-slim"'
+          sh 'Image removed'
+        }
+      }
 
+    }
+    environment {
+      registry = 'mgorczany/docker-flask-test:'
+      registryCredential = 'dockerhub'
+      imageName = "${registry}${env.BUILD_ID}"
+    }
   }
-}
