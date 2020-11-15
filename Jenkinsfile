@@ -61,7 +61,7 @@ pipeline {
           docker.withRegistry('', "${registryCredential}")
           {
             imageToDeploy = docker.image("${imageName}")
-            // imageToDeploy.push()
+            imageToDeploy.push()
             echo 'Image pushed to your dockerhub repository'}
           }
 
