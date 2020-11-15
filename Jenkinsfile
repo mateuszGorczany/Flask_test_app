@@ -2,7 +2,7 @@ pipeline {
   agent {
     dockerfile {
       filename 'Dockerfile'
-      label '$dockerImage'
+      label 'test:1'
       args '--publish 2115:1337'
     }
 
@@ -45,7 +45,7 @@ pipeline {
   environment {
     registry = 'mgorczany/docker-flask-test'
     registryCredential = 'dockerhub'
-    dockerImage = "${registry}{$env.BUILD_NUMBER}"
+    dockerImage = "${registry}:${env.BUILD_NUMBER}"
   }
   post {
     always {
