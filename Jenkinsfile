@@ -70,7 +70,7 @@ pipeline {
 
       stage('Celeaning') {
         steps {
-          sh 'docker image prune'
+          sh 'docker image prune --all'
           sh 'Image removed'
         }
       }
