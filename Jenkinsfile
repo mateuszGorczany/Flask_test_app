@@ -4,7 +4,8 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          dockerImage = docker.build("mgorczany/docker-flask-test:${BUILD_NUMBER}", "--publish 2115:1337")
+          dockerImage = docker.build("mgorczany/docker-flask-test:${BUILD_NUMBER}")
+          Container = dockerImage.run("--publish 2115:1337")
         }
 
       }
@@ -13,7 +14,7 @@ pipeline {
     stage('Test') {
       steps {
         script {
-          dockerImage.inside { sh 'python test.py' }
+          Container.inside { sh 'python test.py' }
         }
 
       }
@@ -22,7 +23,7 @@ pipeline {
     stage('Deliver') {
       steps {
         script {
-          dockerImage.inside {
+          Container.inside {
             sh 'python app.py > flask.log 2>&1 &'
             sh 'cat flask.log'
             input 'Finished using the web site? (Click "Proceed" to continue)'
@@ -36,7 +37,7 @@ pipeline {
     stage('Collect logs') {
       steps {
         script {
-          dockerImage.inside {
+          Container.inside {
             junit 'test_reports/*.xml'
             archiveArtifacts 'flask.log'
             sh 'cat flask.log'
@@ -64,5 +65,6 @@ pipeline {
     registry = 'mgorczany/docker-flask-test:'
     registryCredential = 'dockerhub'
     dockerImage = ''
+    Cointainer = ''
   }
 }
