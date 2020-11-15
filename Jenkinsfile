@@ -56,7 +56,7 @@ pipeline {
     stage('Deploy') {
       agent any
       steps {
-        input 'Publish created dockerimage on Dockerhub?'
+        echo 'Publishing created dockerimage on Dockerhub...'
         script {
           docker.withRegistry('', "${registryCredential}")
           {
