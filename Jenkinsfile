@@ -2,7 +2,7 @@ pipeline {
   agent {
     dockerfile {
       filename 'Dockerfile'
-      args '--publish 2115:1337 --name registry + ":$BUILD_NUMBER"'
+      args '--publish 2115:1337 --name "dockerImage"'
     }
 
   }
@@ -26,7 +26,6 @@ pipeline {
       steps {
         input 'Publish created dockerimage on Dockerhub? (Click "Proceed" to continue)'
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
           docker.withRegistry( '', registryCredential ) {
             dockerImage.push()
           }
@@ -37,7 +36,7 @@ pipeline {
 
     stage('Remove Unused docker image') {
       steps {
-        sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker rmi $dockerImage"
       }
     }
 
@@ -45,7 +44,7 @@ pipeline {
   environment {
     registry = 'mgorczany/docker-flask-test'
     registryCredential = 'dockerhub'
-    dockerImage = ''
+    dockerImage = "${registry}{$env.BUILD_NUMBER}"
   }
   post {
     always {
