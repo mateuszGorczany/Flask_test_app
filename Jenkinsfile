@@ -77,13 +77,13 @@ pipeline {
 
     }
     environment {
-      registry = 'mgorczany/docker-flask-test:'
+      registry = 'mgorczany/docker-flask-test'
       registryCredential = 'dockerhub'
-      imageName = "${registry}${env.BUILD_ID}"
+      imageName = "${registry}:${env.BUILD_ID}"
     }
     post {
       always {
-        sh 'docker image rm $(docker image ls | grep -Fv -e \'python\' | awk \'NR>2 {print $3}\')'
+        sh 'docker image rm $(docker image ls | grep -F -e ${registry} | awk \'NR>1\')'
         echo 'Finished - last build is still available in the docker:dind'
       }
 
