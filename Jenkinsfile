@@ -78,7 +78,7 @@ pipeline {
     }
     environment {
       registry = 'mgorczany/docker-flask-test:'
-      registryCredential = credentials('dockerhub')
+      registryCredential = 'dockerhub'
       imageName = "${registry}${env.BUILD_ID}"
     }
   }
