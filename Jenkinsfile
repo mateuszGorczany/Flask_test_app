@@ -68,7 +68,7 @@ pipeline {
         }
       }
 
-      stage('Celeaning') {
+      stage('Cleaning') {
         steps {
           sh 'docker image prune'
           echo 'Pruning completed'
