@@ -2,52 +2,56 @@ pipeline {
   agent any
   stages {
     stage('Build') {
-      steps {
-        script {
-          dockerImage = docker.build("mgorczany/docker-flask-test:${BUILD_NUMBER}")
-          Container = dockerImage.run("--priviledged -it --publish 2115:1337")
+      agent {
+        dockerfile {
+          filename 'Dockerfile'
+          args '--publish 2115:1337'
+          label '${registry}:${env.BUILD_ID}'
         }
 
+      }
+      steps {
+        sh 'echo Building image...'
       }
     }
 
     stage('Test') {
-      steps {
-        script {
-          Container.inside { sh 'python test.py' }
+      agent {
+        dockerfile {
+          label '${registry}:${env.BUILD_ID}'
         }
 
+      }
+      post {
+        always {
+          junit 'test_reports/*.xml'
+          archiveArtifacts 'flask.log'
+          sh 'cat flask.log'
+        }
+
+      }
+      steps {
+        sh 'python test.py'
       }
     }
 
     stage('Deliver') {
-      steps {
-        script {
-          Container.inside {
-            sh 'python app.py > flask.log 2>&1 &'
-            sh 'cat flask.log'
-            input 'Finished using the web site? (Click "Proceed" to continue)'
-            sh 'pkill -f app.py'
-          }
+      agent {
+        dockerfile {
+          label '${registry}:${env.BUILD_ID}'
         }
 
       }
-    }
-
-    stage('Collect logs') {
       steps {
-        script {
-          Container.inside {
-            junit 'test_reports/*.xml'
-            archiveArtifacts 'flask.log'
-            sh 'cat flask.log'
-          }
-        }
-
+        sh 'python app.py > flask.log 2>&1 &'
+        sh 'cat flask.log'
+        input 'Finished using the web site? (Click "Proceed" to continue)'
+        sh 'pkill -f app.py'
       }
     }
 
     stage('Deploy') {
+      agent any
       steps {
         input 'Publish created dockerimage on Dockerhub? (Click "Proceed" to continue)'
         sh 'docker tag $(docker image ls -q | head -1) ${registry}:${env.BUILD_ID}'
@@ -55,6 +59,7 @@ pipeline {
     }
 
     stage('Remove Unused docker image') {
+      agent any
       steps {
         sh "docker rmi $dockerImage"
       }
@@ -65,6 +70,5 @@ pipeline {
     registry = 'mgorczany/docker-flask-test:'
     registryCredential = 'dockerhub'
     dockerImage = ''
-    Cointainer = ''
   }
 }
