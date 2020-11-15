@@ -5,7 +5,7 @@ pipeline {
       agent {
         dockerfile {
           filename 'Dockerfile'
-          additionalBuildArgs "--tag ${registry}${env.BUILD_ID}"
+          additionalBuildArgs "--tag ${imageName}"
           reuseNode true
         }
 
@@ -76,7 +76,7 @@ pipeline {
       agent any
       steps {
         sh "docker rmi ${registry}${env.BUILD_ID}"
-        sh 'docker image prune --all'
+        sh 'docker image prune --all --force --filter "label!=python3.8-slim"'
       }
     }
 
@@ -84,6 +84,6 @@ pipeline {
   environment {
     registry = 'mgorczany/docker-flask-test:'
     registryCredential = 'dockerhub'
-    dockerImage = ''
+    imageName = "${registry}${env.BUILD_ID}"
   }
 }
