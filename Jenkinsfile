@@ -2,7 +2,7 @@ pipeline {
   agent {
     dockerfile {
       filename 'Dockerfile'
-      args '--publish 2115:1337 -t registry:env.BUILD_ID'
+      args '--publish 2115:1337'
     }
 
   }
@@ -25,12 +25,7 @@ pipeline {
     stage('Deploy') {
       steps {
         input 'Publish created dockerimage on Dockerhub? (Click "Proceed" to continue)'
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
-        }
-
+        sh 'docker tag $(docker image ls -q | head -1) ${registry}:${env.BUILD_ID}'
       }
     }
 
@@ -42,7 +37,7 @@ pipeline {
 
   }
   environment {
-    registry = 'mgorczany/docker-flask-test'
+    registry = 'mgorczany/docker-flask-test:'
     registryCredential = 'dockerhub'
     dockerImage = "${registry}:${env.BUILD_NUMBER}"
   }
