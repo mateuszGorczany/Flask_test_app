@@ -26,8 +26,6 @@ pipeline {
       post {
         always {
           junit 'test_reports/*.xml'
-          archiveArtifacts 'flask.log'
-          sh 'cat flask.log'
         }
 
       }
@@ -40,6 +38,13 @@ pipeline {
       agent {
         dockerfile {
           label "${registry}:${env.BUILD_ID}"
+        }
+
+      }
+      post {
+        always {
+          archiveArtifacts 'flask.log'
+          sh 'cat flask.log'
         }
 
       }
